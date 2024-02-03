@@ -1,4 +1,5 @@
-﻿using Domain.DTOs;
+﻿using Application.Validators;
+using Domain.DTOs;
 using Domain.Interfaces;
 
 namespace Application.Services
@@ -6,12 +7,15 @@ namespace Application.Services
     public class ExchangeRatesService
     {
         private readonly IExchangeRatesClient _client;
-        public ExchangeRatesService(IExchangeRatesClient client)
+        private readonly DateValidator _validator;
+        public ExchangeRatesService(IExchangeRatesClient client, DateValidator validator)
         {
             _client = client;
+            _validator = validator;
         }
         public async Task<List<CurrencyChangeDto>> GetCurrencyChanges(DateTime date)
         {
+            _validator.Validate(date);
             var SelectedDateRates = await GetExchangeRatesByDate(date);
             var PriorDayRates = await GetExchangeRatesByDate(date.AddDays(-1));
 
