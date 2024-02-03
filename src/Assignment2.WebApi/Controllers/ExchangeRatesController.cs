@@ -15,7 +15,7 @@ namespace Assignment2.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCurrencyRates(DateTime date)
         {
-            return Ok(await _service.GetRatesByDateAsync(date));
+            return Ok(await _service.GetCurrencyChanges(date));
         }
     }
 }
