@@ -1,6 +1,4 @@
 ﻿using Domain.DTOs;
-using System;
-using System.Collections.Generic;
 
 namespace Domain.Interfaces
 {

@@ -1,5 +1,6 @@
 ﻿using Application.Validators;
 using Domain.DTOs;
+using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
 
@@ -28,12 +29,12 @@ namespace Application.Services
             return orderedList;
         }
 
-        public async Task<List<ExchangeRateDto>> GetExchangeRatesByDate(DateTime date)
+        public async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
         {
             var result = await _client.GetExchangeRatesByDateAsync(date);
 
             return (from rate in result.Rates
-                    select new ExchangeRateDto
+                    select new ExchangeRateEntity
                     {
                         Currency = rate.Currency,
                         Quantity = rate.Quantity,
@@ -50,7 +51,7 @@ namespace Application.Services
                 throw new InvalidDateException(string.Join(", ", result.Errors.Select(error => error.ErrorMessage)));
             }
         }
-        private List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateDto> selectedDateRates, List<ExchangeRateDto> priorDayRates)
+        private List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateEntity> selectedDateRates, List<ExchangeRateEntity> priorDayRates)
         {
             var currencyChanges = new List<CurrencyChangeDto>();
 
