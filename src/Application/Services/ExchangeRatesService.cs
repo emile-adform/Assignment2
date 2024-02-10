@@ -1,5 +1,6 @@
 ﻿using Application.Validators;
 using Domain.DTOs;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 namespace Application.Services
@@ -15,6 +16,12 @@ namespace Application.Services
         }
         public async Task<List<CurrencyChangeDto>> GetCurrencyChanges(DateTime date)
         {
+            var result = _validator.Validate(date);
+            if (!result.IsValid)
+            {
+                throw new InvalidDateException(string.Join(", ", result.Errors.Select(error => error.ErrorMessage)));
+            }
+            
             _validator.Validate(date);
             var SelectedDateRates = await GetExchangeRatesByDate(date);
             var PriorDayRates = await GetExchangeRatesByDate(date.AddDays(-1));

@@ -1,6 +1,7 @@
 using Infrastructure;
 using Application;
 using System.Reflection;
+using Assignment2.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,5 +35,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();
