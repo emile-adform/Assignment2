@@ -11,13 +11,13 @@ namespace Infrastructure.Services
         private readonly ILogger<BackgroundCleanupService> _logger;
         private readonly IConfiguration _configuration;
         private IServiceProvider Services { get; }
-        int defaultCleanupInHours;
+        int defaultCleanupInSeconds;
         public BackgroundCleanupService(IServiceProvider services, ILogger<BackgroundCleanupService> logger, IConfiguration configuration)
         {
             Services = services;
             _logger = logger;
             _configuration = configuration;
-            defaultCleanupInHours = _configuration.GetValue<int>("DefaultValues:DefaultCleanupValue");
+            defaultCleanupInSeconds = _configuration.GetValue<int>("DefaultValues:DefaultCleanupValue");
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -25,14 +25,14 @@ namespace Infrastructure.Services
 
             await CleanupAsync();
 
-            using PeriodicTimer timer = new(TimeSpan.FromHours(defaultCleanupInHours));
+            using PeriodicTimer timer = new(TimeSpan.FromSeconds(defaultCleanupInSeconds));
 
             try
             {
                 while (await timer.WaitForNextTickAsync(stoppingToken))
                 {
                     await CleanupAsync();
-                    _logger.LogInformation("Cleaned up");
+                    _logger.LogInformation("Time Hosted Service Cleaned up");
                 }
             }
             catch (OperationCanceledException)
