@@ -6,6 +6,7 @@ namespace Domain.Interfaces
     {
         Task InsertExchangeRatesAsync(List<ExchangeRateEntity> rates);
         Task<IEnumerable<ExchangeRateEntity>> GetExchangeRatesAsync(DateTime date);
+        Task DeleteAll();
 
     }
 }

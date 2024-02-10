@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assignment2.WebApi.Controllers
@@ -7,8 +8,8 @@ namespace Assignment2.WebApi.Controllers
     [Route("GetCurrencyRatesByDate")]
     public class ExchangeRatesController : ControllerBase
     {
-        private readonly ExchangeRatesService _service;
-        public ExchangeRatesController(ExchangeRatesService service)
+        private readonly IExchangeRatesService _service;
+        public ExchangeRatesController(IExchangeRatesService service)
         {
             _service = service;
         }

@@ -8,10 +8,12 @@ namespace Assignment2.WebApi.Middlewares;
 public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger _logger;
 
-    public ExceptionHandlingMiddleware(RequestDelegate next)
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task Invoke(HttpContext httpContext)
@@ -32,6 +34,7 @@ public class ExceptionHandlingMiddleware
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;
                 default:
+                    _logger.LogError(ex, ex.Message);
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }

@@ -43,5 +43,10 @@ namespace Infrastructure.Repositories
                     WHERE exchange_date = @Date";
             return await _connection.QueryAsync<ExchangeRateEntity>(sql, new {Date = date});
         }
+        public async Task DeleteAll()
+        {
+            string sql = @"DELETE FROM currency_rates";
+            await _connection.ExecuteAsync(sql);
+        }
     }
 }
