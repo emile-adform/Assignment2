@@ -14,38 +14,20 @@ namespace Application.Services
             _client = client;
             _validator = validator;
         }
+
         public async Task<List<CurrencyChangeDto>> GetCurrencyChanges(DateTime date)
         {
-            var result = _validator.Validate(date);
-            if (!result.IsValid)
-            {
-                throw new InvalidDateException(string.Join(", ", result.Errors.Select(error => error.ErrorMessage)));
-            }
+            ValidateDate(date);
             
-            _validator.Validate(date);
             var SelectedDateRates = await GetExchangeRatesByDate(date);
             var PriorDayRates = await GetExchangeRatesByDate(date.AddDays(-1));
 
-            var CurrencyChanges = new List<CurrencyChangeDto>();
+            var currencyChanges = CalculateCurrencyChanges(SelectedDateRates, PriorDayRates);
 
-            foreach (var currencyRate in SelectedDateRates)
-            {
-                var priorRateInfo = PriorDayRates.First(r => r.Currency == currencyRate.Currency);
-
-                decimal change = ((currencyRate.Rate / currencyRate.Quantity) - (priorRateInfo.Rate / priorRateInfo.Quantity)) 
-                    / priorRateInfo.Rate * 100;
-
-                CurrencyChanges.Add(new CurrencyChangeDto 
-                { 
-                    Change = change, 
-                    Currency = currencyRate.Currency, 
-                    ExchangeDate = currencyRate.ExchangeDate 
-                });
-            }
-
-            var orderedList = CurrencyChanges.OrderByDescending(c => c.Change).ToList();
+            var orderedList = currencyChanges.OrderByDescending(c => c.Change).ToList();
             return orderedList;
         }
+
         public async Task<List<ExchangeRateDto>> GetExchangeRatesByDate(DateTime date)
         {
             var result = await _client.GetExchangeRatesByDateAsync(date);
@@ -58,6 +40,35 @@ namespace Application.Services
                         ExchangeDate = DateTime.Parse(rate.Date),
                         Rate = rate.Rate
                     }).ToList();
+        }
+
+        private void ValidateDate(DateTime date)
+        {
+            var result = _validator.Validate(date);
+            if (!result.IsValid)
+            {
+                throw new InvalidDateException(string.Join(", ", result.Errors.Select(error => error.ErrorMessage)));
+            }
+        }
+        private List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateDto> selectedDateRates, List<ExchangeRateDto> priorDayRates)
+        {
+            var currencyChanges = new List<CurrencyChangeDto>();
+
+            foreach (var currencyRate in selectedDateRates)
+            {
+                var priorRateInfo = priorDayRates.First(r => r.Currency == currencyRate.Currency);
+
+                decimal change = ((currencyRate.Rate / currencyRate.Quantity) - (priorRateInfo.Rate / priorRateInfo.Quantity))
+                    / priorRateInfo.Rate * 100;
+
+                currencyChanges.Add(new CurrencyChangeDto
+                {
+                    Change = change,
+                    Currency = currencyRate.Currency,
+                    ExchangeDate = currencyRate.ExchangeDate
+                });
+            }
+            return currencyChanges;
         }
     }
 }
