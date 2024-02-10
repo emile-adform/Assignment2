@@ -32,5 +32,16 @@ namespace Infrastructure.Repositories
                         @Rate)";
             await _connection.ExecuteAsync(sql, rates);
         }
+        public async Task<IEnumerable<ExchangeRateEntity>> GetExchangeRatesAsync(DateTime date)
+        {
+            string sql = @"
+                    SELECT currency AS Currency, 
+                        quantity AS Quantity, 
+                        rate AS Rate, 
+                        exchange_date AS ExchangeDate
+                    FROM currency_rates
+                    WHERE exchange_date = @Date";
+            return await _connection.QueryAsync<ExchangeRateEntity>(sql, new {Date = date});
+        }
     }
 }
