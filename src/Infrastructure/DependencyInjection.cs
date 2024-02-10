@@ -31,7 +31,7 @@ namespace Infrastructure
             service.AddHttpClient();
 
             service.AddTransient<IExchangeRatesClient, ExchangeRatesClient>();
-            service.AddTransient<ExchangeRatesRepository>();
+            service.AddTransient<IExchangeRatesRepository, ExchangeRatesRepository>();
         }
     }
 }
