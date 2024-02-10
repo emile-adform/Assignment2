@@ -10,10 +10,12 @@ namespace Application.Services
     {
         private readonly IExchangeRatesClient _client;
         private readonly DateValidator _validator;
-        public ExchangeRatesService(IExchangeRatesClient client, DateValidator validator)
+        private readonly IExchangeRatesRepository _repository;
+        public ExchangeRatesService(IExchangeRatesClient client, DateValidator validator, IExchangeRatesRepository repository)
         {
             _client = client;
             _validator = validator;
+            _repository = repository;
         }
 
         public async Task<List<CurrencyChangeDto>> GetCurrencyChanges(DateTime date)
@@ -29,18 +31,26 @@ namespace Application.Services
             return orderedList;
         }
 
-        public async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
+        private async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
         {
-            var result = await _client.GetExchangeRatesByDateAsync(date);
+            var result = (await _repository.GetExchangeRatesAsync(date)).ToList();
 
-            return (from rate in result.Rates
-                    select new ExchangeRateEntity
-                    {
-                        Currency = rate.Currency,
-                        Quantity = rate.Quantity,
-                        ExchangeDate = DateTime.Parse(rate.Date),
-                        Rate = rate.Rate
-                    }).ToList();
+            if(result.Count == 0)
+            {
+                var resultFromClient = await _client.GetExchangeRatesByDateAsync(date);
+                
+                result=  (from rate in resultFromClient.Rates
+                        select new ExchangeRateEntity
+                        {
+                            Currency = rate.Currency,
+                            Quantity = rate.Quantity,
+                            ExchangeDate = DateTime.Parse(rate.Date),
+                            Rate = rate.Rate
+                        }).ToList();
+
+                await _repository.InsertExchangeRatesAsync(result);
+            }
+            return result;
         }
 
         private void ValidateDate(DateTime date)

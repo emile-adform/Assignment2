@@ -30,5 +30,6 @@ namespace Assignment2.WebApi.Controllers
         {
             return Ok(await _service.GetCurrencyChanges(date));
         }
+
     }
 }

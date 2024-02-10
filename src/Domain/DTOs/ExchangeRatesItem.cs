@@ -23,5 +23,10 @@ namespace Domain.DTOs
     {
         [XmlElement("item")]
         public List<ExchangeRateItem>? Rates { get; set; }
+
+        public static implicit operator List<object>(ExchangeRates v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
