@@ -35,7 +35,7 @@ public class ExchangeRatesService : IExchangeRatesService
         await _repository.DeleteAll();
     }
 
-    private async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
+    protected async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
     {
         var result = (await _repository.GetExchangeRatesAsync(date)).ToList();
 

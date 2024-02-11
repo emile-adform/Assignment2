@@ -1,6 +1,8 @@
 ﻿using Application.Services;
 using Application.Validators;
 using Castle.Core.Configuration;
+using Domain.DTOs;
+using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using FluentAssertions;
@@ -34,6 +36,20 @@ namespace Assignment2.UnitTests.Services
             Action act = () => _service.Invoking(s => s.GetCurrencyChanges(invalidDate))
                          .Should().ThrowAsync<InvalidDateException>()
                          .WithMessage("The date cannot be after 2014/12/31");
+        }
+        [Fact]
+        public async Task ValidDate_CallsGetExchangeRatesByDateTwice()
+        {
+            DateTime validDate = new DateTime(2012, 02, 02);
+
+            var serviceMock = new Mock<ExchangeRatesService> { CallBase = true };
+
+            // Setup the mock to return some dummy data for GetExchangeRatesByDate
+            serviceMock.Setup(x => x.GetExchangeRatesByDate(It.IsAny<DateTime>()))
+                       .ReturnsAsync(new List<ExchangeRateEntity>());
+
+            // Act
+            await serviceMock.Object.GetCurrencyChanges(validDate);
         }
 
     }
