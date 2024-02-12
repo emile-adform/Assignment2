@@ -26,8 +26,8 @@ namespace Assignment2.WebApi.Controllers
         /// <response code="400">Invalid date</response>
         /// <response code="401">Unauthorized</response>
         /// <response code="500">Server error</response>
-        [HttpGet]
-        public async Task<IActionResult> GetCurrencyRates([FromQuery]DateTime date)
+        [HttpGet("{date}")]
+        public async Task<IActionResult> GetCurrencyRates(DateTime date)
         {
             return Ok(await _service.GetCurrencyChanges(date));
         }
