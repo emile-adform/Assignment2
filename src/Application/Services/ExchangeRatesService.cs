@@ -35,7 +35,7 @@ public class ExchangeRatesService : IExchangeRatesService
         await _repository.DeleteAll();
     }
 
-    protected async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
+    public async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
     {
         var result = (await _repository.GetExchangeRatesAsync(date)).ToList();
 
@@ -65,7 +65,7 @@ public class ExchangeRatesService : IExchangeRatesService
             throw new InvalidDateException(string.Join(", ", result.Errors.Select(error => error.ErrorMessage)));
         }
     }
-    private List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateEntity> selectedDateRates, List<ExchangeRateEntity> priorDayRates)
+    public List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateEntity> selectedDateRates, List<ExchangeRateEntity> priorDayRates)
     {
         var currencyChanges = new List<CurrencyChangeDto>();
 
