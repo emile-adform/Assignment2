@@ -62,10 +62,10 @@ public class ExchangeRatesService : IExchangeRatesService
         var result = _validator.Validate(date);
         if (!result.IsValid)
         {
-            throw new InvalidDateException(string.Join(", ", result.Errors.Select(error => error.ErrorMessage)));
+            throw new InvalidDateException(result.ToString());
         }
     }
-    public List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateEntity> selectedDateRates, List<ExchangeRateEntity> priorDayRates)
+    private List<CurrencyChangeDto> CalculateCurrencyChanges(List<ExchangeRateEntity> selectedDateRates, List<ExchangeRateEntity> priorDayRates)
     {
         var currencyChanges = new List<CurrencyChangeDto>();
 
