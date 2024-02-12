@@ -19,7 +19,7 @@ public class ApiKeyAuthMiddleware
             return;
         }
         var apiKey = _configuration.GetValue<string>(AuthConstants.ApiKeySectionName);
-        if(!apiKey.Equals(extractedApiKey) )
+        if(apiKey is null || !apiKey.Equals(extractedApiKey))
         {
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("Invalid API key");
