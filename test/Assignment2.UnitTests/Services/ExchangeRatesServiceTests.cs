@@ -57,7 +57,7 @@ namespace Assignment2.UnitTests.Services
 
         }
         [Fact]
-        public async Task GetCurrencyChanges_GivenValidDate_WithoutDataIsInDatabase_CallsClientTwice()
+        public async Task GetCurrencyChanges_GivenValidDate_WithoutDataIsInDatabase_CallsClientTwice_CallsRepositoryTwice()
         {
             // ARRANGE
             DateTime validDate = new DateTime(2012, 02, 02);
@@ -84,8 +84,9 @@ namespace Assignment2.UnitTests.Services
             // ASSERT
             _mockClient.Verify(i => i.GetExchangeRatesByDateAsync(validDate), Times.Once());
             _mockClient.Verify(i => i.GetExchangeRatesByDateAsync(validDate.AddDays(-1)), Times.Once());
-
+            _mockRepository.Verify(i => i.InsertExchangeRatesAsync(It.IsAny<List<ExchangeRateEntity>>()), Times.Exactly(2));
         }
+
 
     }
 }
