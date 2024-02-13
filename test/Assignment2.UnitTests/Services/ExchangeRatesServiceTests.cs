@@ -87,6 +87,47 @@ namespace Assignment2.UnitTests.Services
             _mockRepository.Verify(i => i.InsertExchangeRatesAsync(It.IsAny<List<ExchangeRateEntity>>()), Times.Exactly(2));
         }
 
+        [Fact]
+        public async Task CalculateCurrencyChanges_CalculatesChangesCorrectlyAsync()
+        {
+            // ARRANGE
+            DateTime validDate = new DateTime(2012, 02, 02);
 
+            var selectedDateRates = new List<ExchangeRateEntity>
+        {
+            new ExchangeRateEntity { Currency = "USD", Rate = 1.2m, Quantity = 1, ExchangeDate = validDate },
+            new ExchangeRateEntity { Currency = "EUR", Rate = 0.8m, Quantity = 1, ExchangeDate = validDate }
+        };
+
+            var priorDayRates = new List<ExchangeRateEntity>
+        {
+            new ExchangeRateEntity { Currency = "USD", Rate = 1.1m, Quantity = 1, ExchangeDate = validDate.AddDays(-1) },
+            new ExchangeRateEntity { Currency = "EUR", Rate = 0.9m, Quantity = 1, ExchangeDate = validDate.AddDays(-1) }
+        };
+
+            _mockRepository.Setup(x => x.GetExchangeRatesAsync(validDate)).ReturnsAsync(selectedDateRates.ToArray());
+            _mockRepository.Setup(x => x.GetExchangeRatesAsync(validDate.AddDays(-1))).ReturnsAsync(priorDayRates.ToArray());
+
+            // ACT
+            var currencyChanges = await _service.GetCurrencyChanges(validDate);
+
+            // ASSERT
+            currencyChanges.Should().HaveCount(2);
+
+            currencyChanges.Should().ContainEquivalentOf(new CurrencyChangeDto
+            {
+                Change = 9.090909090909090909090909090M,
+                Currency = "USD",
+                ExchangeDate = validDate
+            });
+
+            currencyChanges.Should().ContainEquivalentOf(new CurrencyChangeDto
+            {
+                Change = -11.111111111111111111111111110M,
+                Currency = "EUR",
+                ExchangeDate = validDate
+            });
+        }
     }
+
 }
