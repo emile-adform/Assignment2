@@ -3,6 +3,7 @@ using Domain.DTOs;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Services;
 
@@ -35,22 +36,21 @@ public class ExchangeRatesService : IExchangeRatesService
         await _repository.DeleteAll();
     }
 
-    public async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
+    private async Task<List<ExchangeRateEntity>> GetExchangeRatesByDate(DateTime date)
     {
         var result = (await _repository.GetExchangeRatesAsync(date)).ToList();
 
-        if(result.Count == 0)
+        if (!result.Any())
         {
             var resultFromClient = await _client.GetExchangeRatesByDateAsync(date);
             
-            result=  (from rate in resultFromClient.Rates
-                    select new ExchangeRateEntity
-                    {
-                        Currency = rate.Currency,
-                        Quantity = rate.Quantity,
-                        ExchangeDate = DateTime.Parse(rate.Date),
-                        Rate = rate.Rate
-                    }).ToList();
+            result = resultFromClient.Rates.Select(r => new ExchangeRateEntity 
+            { 
+                Currency = r.Currency, 
+                Quantity = r.Quantity, 
+                ExchangeDate = DateTime.Parse(r.Date), 
+                Rate = r.Rate
+            }).ToList();
 
             await _repository.InsertExchangeRatesAsync(result);
         }
