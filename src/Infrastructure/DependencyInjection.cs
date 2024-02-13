@@ -15,8 +15,6 @@ namespace Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
         {
-            service.AddHostedService<BackgroundCleanupService>();
-
             var connectionString = configuration.GetConnectionString("PostgreConnection") ?? throw new ArgumentNullException("Connection string was not found."); ;
             service.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));
 
@@ -30,6 +28,8 @@ namespace Infrastructure
             //var result = upgrader.PerformUpgrade();
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+            service.AddHostedService<BackgroundCleanupService>();
 
             service.AddHttpClient();
 
