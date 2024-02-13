@@ -38,7 +38,7 @@ public class ExchangeRatesServiceTests
 
     [Theory]
     [AutoData]
-    public async Task GetCurrencyChanges_GivenValidDate_WhenDataIsInDatabase_CallsRepositoryTwice(List<ExchangeRateEntity> entities)
+    public async Task GetCurrencyChanges_WhenDataIsInDatabase_CallsRepositoryTwice(List<ExchangeRateEntity> entities)
     {
         DateTime validDate = new DateTime(2012, 02, 02);
 
@@ -51,7 +51,7 @@ public class ExchangeRatesServiceTests
 
     }
     [Fact]
-    public async Task GetCurrencyChanges_GivenValidDate_WithoutDataIsInDatabase_CallsClientTwice_CallsRepositoryTwice()
+    public async Task GetCurrencyChanges_WithoutDataIsInDatabase_CallsCorrectDependencies()
     {
         // ARRANGE
         DateTime validDate = new DateTime(2012, 02, 02);
