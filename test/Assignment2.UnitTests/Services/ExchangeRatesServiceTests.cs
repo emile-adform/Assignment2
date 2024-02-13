@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Application.Validators;
+using AutoFixture.Xunit2;
 using Castle.Core.Configuration;
 using Domain.DTOs;
 using Domain.Entities;
@@ -28,28 +29,62 @@ namespace Assignment2.UnitTests.Services
             _validator = new DateValidator();
             _service = new ExchangeRatesService(_mockClient.Object, _validator, _mockRepository.Object);
         }
+
         [Fact]
         public void InvalidDate_throwsInvalidDateException()
         {
+            // ARRANGE
             DateTime invalidDate = new DateTime(2023, 02, 02);
 
+            // ACT AND ASSERT
             Action act = () => _service.Invoking(s => s.GetCurrencyChanges(invalidDate))
                          .Should().ThrowAsync<InvalidDateException>()
                          .WithMessage("The date cannot be after 2014/12/31");
         }
-        [Fact]
-        public async Task ValidDate_CallsGetExchangeRatesByDateTwice()
+
+        [Theory]
+        [AutoData]
+        public async Task GetCurrencyChanges_GivenValidDate_WhenDataIsInDatabase_CallsRepositoryTwice(List<ExchangeRateEntity> entities)
         {
             DateTime validDate = new DateTime(2012, 02, 02);
 
-            var serviceMock = new Mock<ExchangeRatesService> { CallBase = true };
+            _mockRepository.Setup(x => x.GetExchangeRatesAsync(It.IsAny<DateTime>())).ReturnsAsync(new List<ExchangeRateEntity>(entities));
 
-            // Setup the mock to return some dummy data for GetExchangeRatesByDate
-            serviceMock.Setup(x => x.GetExchangeRatesByDate(It.IsAny<DateTime>()))
-                       .ReturnsAsync(new List<ExchangeRateEntity>());
+            await _service.GetCurrencyChanges(validDate);
 
-            // Act
-            await serviceMock.Object.GetCurrencyChanges(validDate);
+            _mockRepository.Verify(i => i.GetExchangeRatesAsync(validDate), Times.Once());
+            _mockRepository.Verify(i => i.GetExchangeRatesAsync(validDate.AddDays(-1)), Times.Once());
+
+        }
+        [Fact]
+        public async Task GetCurrencyChanges_GivenValidDate_WithoutDataIsInDatabase_CallsClientTwice()
+        {
+            // ARRANGE
+            DateTime validDate = new DateTime(2012, 02, 02);
+
+            var item = new ExchangeRateItem
+            {
+                Date = "2001.02.02",
+                Rate = 1.2M,
+                Quantity = 1
+            };
+            List<ExchangeRateItem> list = new List<ExchangeRateItem> { item};
+
+            var entity = new ExchangeRates
+            {
+                Rates = list
+            };
+
+            _mockRepository.Setup(x => x.GetExchangeRatesAsync(It.IsAny<DateTime>())).ReturnsAsync(new List<ExchangeRateEntity>());
+            _mockClient.Setup(x => x.GetExchangeRatesByDateAsync(It.IsAny<DateTime>())).ReturnsAsync(entity);
+
+            // ACT
+            await _service.GetCurrencyChanges(validDate);
+
+            // ASSERT
+            _mockClient.Verify(i => i.GetExchangeRatesByDateAsync(validDate), Times.Once());
+            _mockClient.Verify(i => i.GetExchangeRatesByDateAsync(validDate.AddDays(-1)), Times.Once());
+
         }
 
     }
