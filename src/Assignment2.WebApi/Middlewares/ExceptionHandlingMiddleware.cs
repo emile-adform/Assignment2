@@ -33,6 +33,9 @@ public class ExceptionHandlingMiddleware
                 case InvalidDateException:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;
+                case ExternalApiDataException:
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    break;
                 default:
                     _logger.LogError(ex, ex.Message);
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;

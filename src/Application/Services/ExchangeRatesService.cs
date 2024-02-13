@@ -42,9 +42,9 @@ public class ExchangeRatesService : IExchangeRatesService
 
         if (!result.Any())
         {
-            var resultFromClient = await _client.GetExchangeRatesByDateAsync(date);
+            var resultFromClient = await _client.GetExchangeRatesByDateAsync(date) ?? throw new ExternalApiDataException("Unable to retrieve data from external API.");
             
-            result = resultFromClient.Rates.Select(r => new ExchangeRateEntity 
+            result = resultFromClient.Rates!.Select(r => new ExchangeRateEntity 
             { 
                 Currency = r.Currency, 
                 Quantity = r.Quantity, 
