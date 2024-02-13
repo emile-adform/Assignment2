@@ -3,7 +3,6 @@ using Domain.DTOs;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Services;
 

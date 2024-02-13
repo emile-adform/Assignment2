@@ -1,8 +1,7 @@
 ﻿
-namespace Domain.Exceptions
+namespace Domain.Exceptions;
+
+public class ExternalApiDataException : Exception
 {
-    public class ExternalApiDataException : Exception
-    {
-        public ExternalApiDataException(string message) : base(message) { }
-    }
+    public ExternalApiDataException(string message) : base(message) { }
 }

@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{658E13D5-38DF-4C5F-9FBD-447DA4A10A68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment2.UnitTests", "test\Assignment2.UnitTests\Assignment2.UnitTests.csproj", "{0CEB70EC-A5E2-49FA-8FBF-5E049D958F2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assignment2.UnitTests", "test\Assignment2.UnitTests\Assignment2.UnitTests.csproj", "{0CEB70EC-A5E2-49FA-8FBF-5E049D958F2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ABBBC567-2EC5-4F88-B870-1D4E77CACEBF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

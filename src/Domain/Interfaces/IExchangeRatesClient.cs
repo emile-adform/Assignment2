@@ -1,9 +1,8 @@
 ﻿using Domain.DTOs;
 
-namespace Domain.Interfaces
+namespace Domain.Interfaces;
+
+public interface IExchangeRatesClient
 {
-    public interface IExchangeRatesClient
-    {
-        Task<ExchangeRates> GetExchangeRatesByDateAsync(DateTime date);
-    }
+    Task<ExchangeRates> GetExchangeRatesByDateAsync(DateTime date);
 }
