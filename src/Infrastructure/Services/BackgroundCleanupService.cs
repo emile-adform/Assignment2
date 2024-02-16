@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using Application.ExchangeRates.Commands;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,13 +11,15 @@ internal class BackgroundCleanupService : BackgroundService
 {
     private readonly ILogger<BackgroundCleanupService> _logger;
     private readonly IConfiguration _configuration;
+    private readonly IMediator _mediator;
     private IServiceProvider Services { get; }
     int defaultCleanupInSeconds;
-    public BackgroundCleanupService(IServiceProvider services, ILogger<BackgroundCleanupService> logger, IConfiguration configuration)
+    public BackgroundCleanupService(IServiceProvider services, ILogger<BackgroundCleanupService> logger, IConfiguration configuration, IMediator mediator)
     {
         Services = services;
         _logger = logger;
         _configuration = configuration;
+        _mediator = mediator;
         defaultCleanupInSeconds = _configuration.GetValue<int>("DefaultValues:DefaultCleanupValue");
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,11 +47,23 @@ internal class BackgroundCleanupService : BackgroundService
     {
         using (var scope = Services.CreateScope())
         {
-            var itemService =
-                scope.ServiceProvider
-                    .GetRequiredService<IExchangeRatesService>();
-
-            await itemService.CleanupAsync();
+            await _mediator.Send(new CleanupDatabaseCommand(), CancellationToken.None);
         }
     }
+    //private async Task CleanupAsync()
+    //{
+    //    using (var scope = _serviceScopeFactory.CreateScope())
+    //    {
+    //        try
+    //        {
+    //            // Use MediatR to send the cleanup command
+    //            await _mediator.Send(new CleanupDatabaseCommand(), CancellationToken.None);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            // Handle exceptions as needed
+    //            // Log the exception, retry, or take appropriate action
+    //        }
+    //    }
+    //}
 }
