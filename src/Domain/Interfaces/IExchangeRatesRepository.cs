@@ -7,5 +7,5 @@ public interface IExchangeRatesRepository
     Task InsertExchangeRatesAsync(List<ExchangeRateEntity> rates);
     Task<IEnumerable<ExchangeRateEntity>> GetExchangeRatesAsync(DateTime date);
     Task DeleteAll();
-
+    Task<IEnumerable<ExchangeRateEntity>> GetAllAsync();
 }

@@ -38,6 +38,16 @@ public class ExchangeRatesRepository : IExchangeRatesRepository
                     WHERE exchange_date = @Date";
         return await _connection.QueryAsync<ExchangeRateEntity>(sql, new {Date = date});
     }
+    public async Task<IEnumerable<ExchangeRateEntity>> GetAllAsync()
+    {
+        string sql = @"
+                    SELECT currency AS Currency, 
+                        quantity AS Quantity, 
+                        rate AS Rate, 
+                        exchange_date AS ExchangeDate
+                    FROM currency_rates";
+        return await _connection.QueryAsync<ExchangeRateEntity>(sql);
+    }
     public async Task DeleteAll()
     {
         string sql = @"DELETE FROM currency_rates";
