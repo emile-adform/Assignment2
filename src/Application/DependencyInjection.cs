@@ -11,6 +11,7 @@ public static class DependencyInjection
     {
         service.AddTransient<IExchangeRatesService, ExchangeRatesService>();
         service.AddTransient<DateValidator>();
-
+        service.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
     }
 }
