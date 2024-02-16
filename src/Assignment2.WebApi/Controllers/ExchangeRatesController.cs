@@ -20,7 +20,7 @@ namespace Assignment2.WebApi.Controllers
         {
             return Ok(await _mediator.Send(new GetAllExchangeRatesQuery()));
         }
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> Delete()
         {
             await _mediator.Send(new CleanupDatabaseCommand());
