@@ -26,7 +26,7 @@ internal class BackgroundCleanupService : BackgroundService
     {
         _logger.LogInformation("Timed Hosted Service running.");
 
-        await CleanupAsync();
+        //await CleanupAsync();
 
         using PeriodicTimer timer = new(TimeSpan.FromSeconds(defaultCleanupInSeconds));
 
@@ -45,6 +45,7 @@ internal class BackgroundCleanupService : BackgroundService
     }
     private async Task CleanupAsync()
     {
+        //return;
         using (var scope = Services.CreateScope())
         {
             await _mediator.Send(new CleanupDatabaseCommand(), CancellationToken.None);

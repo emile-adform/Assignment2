@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="dbup\script.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="dbup\script.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
