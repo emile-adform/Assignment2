@@ -15,16 +15,30 @@ namespace Assignment2.WebApi.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Gets all currency rates from database
+        /// </summary>
+        /// 
+        /// <returns> The list of exchange rates that are saved in database </returns>
+        /// <response code="200">Request successfuly achieved</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Server error</response>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             return Ok(await _mediator.Send(new GetAllExchangeRatesQuery()));
         }
+        /// <summary>
+        /// Deletes all data from database
+        /// </summary>
+        /// <response code="204">Request successfuly achieved</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Server error</response>
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
             await _mediator.Send(new CleanupDatabaseCommand());
-            return Ok();
+            return NoContent();
         }
         /// <summary>
         /// Gets currency rates changes for selected date
