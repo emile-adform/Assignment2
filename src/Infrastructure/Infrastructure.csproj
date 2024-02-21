@@ -28,7 +28,11 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql" Version="8.0.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
     <PackageReference Include="System.ServiceModel.Http" Version="8.0.0" />
+    <PackageReference Include="Testcontainers" Version="3.7.0" />
+    <PackageReference Include="TestContainers.Container.Database.PostgreSql" Version="1.5.4" />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="3.7.0" />
   </ItemGroup>
 
   <ItemGroup>

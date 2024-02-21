@@ -18,7 +18,7 @@ namespace Assignment.IntegrationTests
             {
                 AllowAutoRedirect = false
             });
-            _client.DefaultRequestHeaders.Add(AuthConstants.ApiKeyHeaderName, "letmein");
+            _client.DefaultRequestHeaders.Add(AuthConstants.ApiKeyHeaderName, "test");
         }
 
         [Fact]

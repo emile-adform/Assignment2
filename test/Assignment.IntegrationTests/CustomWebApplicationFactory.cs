@@ -13,11 +13,12 @@ namespace Assignment.IntegrationTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+
             builder.ConfigureServices(services =>
             {
                 var sp = services.BuildServiceProvider();
 
-                services.AddTransient<IDbConnection>(d => new NpgsqlConnection(sp.GetRequiredService<IConfiguration>().GetConnectionString("PostgreConnection")));
+                services.AddTransient<IDbConnection>(d => new NpgsqlConnection(sp.GetRequiredService<IConfiguration>().GetConnectionString("TestDatabaseConnection")));
 
                 services.AddAuthentication(options =>
                 {
@@ -26,7 +27,7 @@ namespace Assignment.IntegrationTests
 
             });
 
-            builder.UseEnvironment("Development");
+            builder.UseEnvironment("Test");
         }
     }
 }
