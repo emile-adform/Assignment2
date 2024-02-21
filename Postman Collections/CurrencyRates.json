@@ -1,0 +1,92 @@
+{
+	"info": {
+		"_postman_id": "c047510e-0643-46e7-9404-cba1e69dd702",
+		"name": "CurrencyChangesAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://localhost:7148/rates/GetCurrencyChangesByDate",
+			"id": "c0c0b322-1bc9-4733-a7ae-00a47c206750",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "letmein",
+						"description": "Swagger authentication",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:7148/rates/GetCurrencyChangesByDate?date=2012-02-02",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7148",
+					"path": [
+						"rates",
+						"GetCurrencyChangesByDate"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2012-02-02"
+						}
+					]
+				},
+				"description": "This endpoint makes an HTTP GET request to retrieve currency changes by date from the server. The request should include the date parameter in the query string to specify the date for which the currency changes are required.\n\nUpon successful execution, the server responds with a status code of 200 and a JSON array containing objects with the currency, change, and exchangeDate properties. The currency property represents the currency code, the change property indicates the change in the currency, and the exchangeDate property denotes the date of the exchange.\n\nFor example:\n\n``` json\n[\n    {\n        \"currency\": \"USD\",\n        \"change\": 0.5,\n        \"exchangeDate\": \"2012-02-02\"\n    },\n    {\n        \"currency\": \"EUR\",\n        \"change\": -0.2,\n        \"exchangeDate\": \"2012-02-02\"\n    }\n]\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:7148/rates",
+			"id": "5028d654-b2f4-4d51-8000-676a5d57ba8e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:7148/rates",
+			"id": "962b2673-306c-4ef0-8d34-ca9cee977a82",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "letmein",
+						"description": "Swagger Authentication",
+						"type": "text"
+					}
+				],
+				"url": "https://localhost:7148/rates"
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:7148/rates/GetCurrencyChangesByDate",
+			"id": "be39bc3c-b6ea-4a62-90f1-f56c24cf1c55",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"description": "This endpoint sends an HTTP GET request to retrieve currency changes for a specific date. The request should include the date parameter in the query string.\n\nThe response will have a status code of 400 and a JSON content type. The response body will contain a message indicating the reason for the bad request."
+			},
+			"response": []
+		}
+	]
+}
